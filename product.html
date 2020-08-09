@@ -174,7 +174,8 @@
                 </div>
             </div>
             <!-- pagination -->
-            <pagination></pagination>
+            <!-- 用props把資料從外層傳到內層 -->
+            <pagination :pages="pagination" @updatePage="getList"></pagination>
 
         </div>
     </div>
@@ -186,8 +187,8 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>
-    <script src="product.js"></script>
-    <script src="pagination.js"></script>
+    <!-- 為了匯入外部元件，必須加上type="module"，才能正確匯入 -->
+    <script src="product.js" type="module"></script>
 </body>
 
 </html>
