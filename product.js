@@ -7,7 +7,9 @@ var app = new Vue({
     el: '#app',
     data: {
         product: [],
-        tempProduct: {},
+        tempProduct: {
+            imageUrl:[],
+        },
         //用來存取分頁的資訊
         pagination: {},
         user: {
@@ -20,7 +22,9 @@ var app = new Vue({
         activateModal(action, item) {
             switch (action) {
                 case 'add':
-                    this.tempProduct = {};
+                    this.tempProduct = {
+                        imageUrl:[],
+                    };
                     //先執行case判斷，再來開啟modal
                     $('#productModal').modal('show', item);
                     break;
@@ -90,14 +94,14 @@ var app = new Vue({
             axios.defaults.headers.common.Authorization = `Bearer ${vm.user.token}`;
             //如果id為真值，代表是編輯產品，使用patch覆蓋伺服器內的資料
             if (vm.tempProduct.id) {
-                axios.patch(editUrl)
+                axios.patch(editUrl,vm.tempProduct)
                     .then(function () {
                         $('#productModal').modal('hide'); // AJAX 新增成功後關閉 Modal
                         vm.getList();//重新呈現產品列表
                     })
             }
             else {
-                axios.post(addUrl)
+                axios.post(addUrl,vm.tempProduct)
                     .then(function () {
                         $('#productModal').modal('hide'); // AJAX 新增成功後關閉 Modal
                         vm.getList();//重新呈現產品列表
@@ -120,9 +124,13 @@ var app = new Vue({
         },
     },
     created() {
+        const vm=this;
         this.user.token = document.cookie.replace(/(?:(?:^|.*;\s*)reyToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
         axios.defaults.headers.common.Authorization = `Bearer ${this.user.token}`;
         console.log(this.user.token);
-        this.getList();
+        //進入頁面後立刻執行一次更新頁面
+        vm.getList();
+        //之後設定成會自動更新網頁
+        setInterval(function(){vm.getList();},1000000);
     }
 });
