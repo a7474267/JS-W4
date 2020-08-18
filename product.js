@@ -29,8 +29,9 @@ var app = new Vue({
                     $('#productModal').modal('show', item);
                     break;
                 case 'edit':
-                    this.tempProduct = Object.assign({}, item); //淺層複製
-                    $('#productModal').modal('show');
+                    // this.tempProduct = Object.assign({}, item); //淺層複製
+                    // $('#productModal').modal('show');
+                    this.getProduct(item.id);
                     break;
                 case 'delete':
                     this.tempProduct = Object.assign({}, item);
@@ -40,6 +41,18 @@ var app = new Vue({
                     break;
             }
         },
+        getProduct(id) {
+            const api = `https://course-ec-api.hexschool.io/api/${this.user.uuid}/admin/ec/product/${id}`;
+            axios.get(api).then((res) => {
+              // 取得成功後回寫到 tempProduct
+              this.tempProduct = res.data.data;
+              // 確保資料已經回寫後在打開 Modal
+              $('#productModal').modal('show');
+      
+            }).catch((error) => {
+              console.log(error); // 若出現錯誤則顯示錯誤訊息
+            });
+          },
         //刪除確認事件
         deleteProduct() {
             //使用這個方式，只能在畫面上刪除資料，但實際上資料還是存在於遠端的伺服器內，並沒有真正做到刪除

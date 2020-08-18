@@ -12,7 +12,7 @@ export default {
     methods:{
         updatePage(num){
             const vm=this;
-            this.$emit("pages")
+            vm.$emit("updatepage",num);
         },
     },
 };
